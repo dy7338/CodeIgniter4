@@ -27,7 +27,7 @@ The following example shows a common usage pattern within your controllers.
         public function createUser()
         {
             $model = new UserModel();
-            $user = $model->save($this->request->getPost());
+            $user  = $model->save($this->request->getPost());
 
             // Respond with 201 status code
             return $this->respondCreated();
@@ -71,7 +71,7 @@ the following criteria:
 * If $data is an array, it will try to negotiate the content type with what the client asked for, defaulting to JSON
     if nothing else has been specified within Config\API.php, the ``$supportedResponseFormats`` property.
 
-To define the formatter that is used, edit **Config\API.php**. The ``$supportedResponseFormats`` contains a list of
+To define the formatter that is used, edit **Config/Format.php**. The ``$supportedResponseFormats`` contains a list of
 mime types that your application can automatically format the response for. By default, the system knows how to
 format both XML and JSON responses::
 
@@ -144,14 +144,14 @@ Class Reference
     The response is an array with two elements: ``error`` and ``messages``. The ``error`` element contains the status
     code of the error. The ``messages`` element contains an array of error messages. It would look something like::
 
-    $response = [
-        'status' => 400,
-        'code' => '321a',
-        'messages' => [
-            'Error message 1',
-            'Error message 2'
-        ]
-    ];
+	    $response = [
+	        'status'   => 400,
+	        'code'     => '321a',
+	        'messages' => [
+	            'Error message 1',
+	            'Error message 2'
+	        ]
+	    ];
 
 .. php:method:: respondCreated($data[, string $message = ''])
 
@@ -159,12 +159,10 @@ Class Reference
     :param string $message: A custom "reason" message to return.
     :returns: The value of the Response object's send() method.
 
-    Sets the appropriate status code to use when a new resource was created, typically 201.
+    Sets the appropriate status code to use when a new resource was created, typically 201.::
 
-    ::
-
-    $user = $userModel->insert($data);
-    return $this->respondCreated($user);
+	    $user = $userModel->insert($data);
+	    return $this->respondCreated($user);
 
 .. php:method:: respondDeleted($data[, string $message = ''])
 
@@ -172,13 +170,12 @@ Class Reference
         :param string $message: A custom "reason" message to return.
         :returns: The value of the Response object's send() method.
 
-        Sets the appropriate status code to use when a new resource was deleted as the result of
-        this API call, typically 200.
+    Sets the appropriate status code to use when a new resource was deleted as the result of this API call, typically 200.
 
-        ::
+    ::
 
-    $user = $userModel->delete($id);
-    return $this->respondDeleted(['id' => $id]);
+	    $user = $userModel->delete($id);
+	    return $this->respondDeleted(['id' => $id]);
 
 .. php:method:: failUnauthorized(string $description[, string $code=null[, string $message = '']])
 
@@ -192,7 +189,7 @@ Class Reference
 
     ::
 
-    return $this->failUnauthorized('Invalid Auth token');
+	    return $this->failUnauthorized('Invalid Auth token');
 
 .. php:method:: failForbidden(string $description[, string $code=null[, string $message = '']])
 
@@ -207,7 +204,7 @@ Class Reference
 
     ::
 
-    return $this->failForbidden('Invalid API endpoint.');
+    	return $this->failForbidden('Invalid API endpoint.');
 
 .. php:method:: failNotFound(string $description[, string $code=null[, string $message = '']])
 
@@ -220,7 +217,7 @@ Class Reference
 
     ::
 
-    return $this->failNotFound('User 13 cannot be found.');
+    	return $this->failNotFound('User 13 cannot be found.');
 
 .. php:method:: failValidationError(string $description[, string $code=null[, string $message = '']])
 
@@ -234,7 +231,7 @@ Class Reference
 
     ::
 
-    return $this->failValidationError($validation->getErrors());
+    	return $this->failValidationError($validation->getErrors());
 
 .. php:method:: failResourceExists(string $description[, string $code=null[, string $message = '']])
 
@@ -248,7 +245,7 @@ Class Reference
 
     ::
 
-    return $this->failResourceExists('A user already exists with that email.');
+    	return $this->failResourceExists('A user already exists with that email.');
 
 .. php:method:: failResourceGone(string $description[, string $code=null[, string $message = '']])
 
@@ -262,7 +259,7 @@ Class Reference
 
     ::
 
-    return $this->failResourceGone('That user has been previously deleted.');
+    	return $this->failResourceGone('That user has been previously deleted.');
 
 .. php:method:: failTooManyRequests(string $description[, string $code=null[, string $message = '']])
 
@@ -276,7 +273,7 @@ Class Reference
 
     ::
 
-    return $this->failTooManyRequests('You must wait 15 seconds before making another request.');
+    	return $this->failTooManyRequests('You must wait 15 seconds before making another request.');
 
 .. php:method:: failServerError(string $description[, string $code = null[, string $message = '']])
 
@@ -289,4 +286,4 @@ Class Reference
 
     ::
 
-    return $this->failServerError('Server error.');
+    	return $this->failServerError('Server error.');

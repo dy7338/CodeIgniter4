@@ -76,7 +76,7 @@ class BaseConnectionTest extends \CIUnitTestCase
 	{
 	    $db = new MockConnection($this->options);
 
-		$this->expectException('CodeIgniter\DatabaseException');
+		$this->expectException('\CodeIgniter\Database\Exceptions\DatabaseException');
 		$this->expectExceptionMessage('Unable to connect to the database.');
 
 		$db->shouldReturn('connect', false)
@@ -98,7 +98,7 @@ class BaseConnectionTest extends \CIUnitTestCase
 	//--------------------------------------------------------------------
 
 	/**
-	 * @throws \CodeIgniter\DatabaseException
+	 * @throws \CodeIgniter\Database\Exceptions\DatabaseException
 	 * @group single
 	 */
 	public function testCanConnectToFailoverWhenNoConnectionAvailable()
@@ -130,6 +130,20 @@ class BaseConnectionTest extends \CIUnitTestCase
 	}
 
 	//--------------------------------------------------------------------
+
+	/**
+	 * Ensures we don't have escaped - values...
+	 *
+	 * @see https://github.com/bcit-ci/CodeIgniter4/issues/606
+	 */
+	public function testEscapeProtectsNegativeNumbers()
+	{
+		$db = new MockConnection($this->options);
+
+		$db->initialize();
+
+		$this->assertEquals("'-100'", $db->escape(-100));
+	}
 
 
 }

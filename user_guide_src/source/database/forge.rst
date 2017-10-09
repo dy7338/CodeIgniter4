@@ -72,7 +72,7 @@ also require a 'constraint' key.
 
 	$fields = array(
 		'users' => array(
-			'type' => 'VARCHAR',
+			'type'       => 'VARCHAR',
 			'constraint' => '100',
 		),
 	);
@@ -93,25 +93,25 @@ Additionally, the following key/values can be used:
 ::
 
 	$fields = array(
-		'blog_id' => array(
-			'type' => 'INT',
-			'constraint' => 5,
-			'unsigned' => TRUE,
+		'blog_id'          => array(
+			'type'           => 'INT',
+			'constraint'     => 5,
+			'unsigned'       => TRUE,
 			'auto_increment' => TRUE
 		),
-		'blog_title' => array(
-			'type' => 'VARCHAR',
-			'constraint' => '100',
-			'unique' => TRUE,
+		'blog_title'       => array(
+			'type'           => 'VARCHAR',
+			'constraint'     => '100',
+			'unique'         => TRUE,
 		),
-		'blog_author' => array(
-			'type' =>'VARCHAR',
-			'constraint' => '100',
-			'default' => 'King of Town',
+		'blog_author'      => array(
+			'type'           =>'VARCHAR',
+			'constraint'     => '100',
+			'default'        => 'King of Town',
 		),
 		'blog_description' => array(
-			'type' => 'TEXT',
-			'null' => TRUE,
+			'type'           => 'TEXT',
+			'null'           => TRUE,
 		),
 	);
 
@@ -313,11 +313,10 @@ Class Reference
 
 .. php:class:: \CodeIgniter\Database\Forge
 
-	.. php:method:: addColumn($table[, $field = array()[, $_after = NULL]])
+	.. php:method:: addColumn($table[, $field = array()])
 
 		:param	string	$table: Table name to add the column to
 		:param	array	$field: Column definition(s)
-		:param	string	$_after: Column for AFTER clause (deprecated)
 		:returns:	TRUE on success, FALSE on failure
 		:rtype:	bool
 

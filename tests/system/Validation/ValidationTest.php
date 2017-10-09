@@ -1,6 +1,5 @@
 <?php namespace CodeIgniter\Validation;
 
-use CodeIgniter\Services;
 use Config\Database;
 
 class ValidationTest extends \CIUnitTestCase
@@ -55,11 +54,11 @@ class ValidationTest extends \CIUnitTestCase
 
 	//--------------------------------------------------------------------
 
-	public function testRunReturnsTrueWithNothingToDo()
+	public function testRunReturnsFalseWithNothingToDo()
 	{
 		$this->validation->setRules([]);
 
-		$this->assertTrue($this->validation->run([]));
+		$this->assertFalse($this->validation->run([]));
 	}
 
 	//--------------------------------------------------------------------
@@ -161,6 +160,8 @@ class ValidationTest extends \CIUnitTestCase
 
 	public function testGetErrorsWhenNone()
 	{
+		$_SESSION = [];
+
 		$data = [
 			'foo' => 123,
 		];
@@ -335,6 +336,21 @@ class ValidationTest extends \CIUnitTestCase
 			]);
 
 			$this->assertFalse($this->validation->run($data));
+	}
+
+	//--------------------------------------------------------------------
+
+	public function testRequiredObject()
+	{
+		$data = [
+			'foo' => new \stdClass(),
+		];
+
+		$this->validation->setRules([
+			'foo' => 'required',
+		]);
+
+		$this->assertTrue($this->validation->run($data));
 	}
 
 	//--------------------------------------------------------------------
@@ -993,7 +1009,7 @@ class ValidationTest extends \CIUnitTestCase
 		];
 
 		$this->validation->setRules([
-				'foo' => "alpha_numeric_spaces",
+				'foo' => "alpha_numeric_space",
 		]);
 
 		$this->assertEquals($expected, $this->validation->run($data));
@@ -1479,6 +1495,7 @@ class ValidationTest extends \CIUnitTestCase
 			'foo' => 'bar',
 			'bar' => 'something',
 			'baz' => null,
+			'ar'  => []             // Was running into issues with array values
 		];
 
 		$this->validation->setRules([
@@ -1497,7 +1514,7 @@ class ValidationTest extends \CIUnitTestCase
 			['foo', 'bar', true],
 			['nope', 'baz', true],
 			[null, null, true],
-			[null, 'foo', true],
+			[null, 'foo', false],
 			['foo', null, true]
 		];
 	}

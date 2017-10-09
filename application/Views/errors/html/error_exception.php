@@ -21,7 +21,7 @@
 		<div class="container">
 			<h1><?= htmlspecialchars($title, ENT_SUBSTITUTE, 'UTF-8'), ($exception->getCode() ? ' #'.$exception->getCode() : '') ?></h1>
 			<p>
-				<?= htmlspecialchars($exception->getMessage(), ENT_SUBSTITUTE) ?>
+				<?= $exception->getMessage() ?>
 				<a href="https://www.google.com/search?q=<?= urlencode($title.' '.preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>"
 				   rel="noreferrer" target="_blank">search &rarr;</a>
 			</p>
@@ -86,12 +86,15 @@
 									<div class="args" id="<?= $args_id ?>">
 										<table cellspacing="0">
 
-										<?php foreach ($row['args'] as $key => $value) : ?>
-											<?php
-												$mirror = isset($row['class']) ? new \ReflectionMethod($row['class'], $row['function']) :
-													new \ReflectionFunction($row['function']);
-												$params = $mirror->getParameters();
-											?>
+										<?php
+										$params = null;
+										// Reflection by name is not available for closure function
+										if( substr( $row['function'], -1 ) !== '}' )
+										{
+											$mirror = isset( $row['class'] ) ? new \ReflectionMethod( $row['class'], $row['function'] ) : new \ReflectionFunction( $row['function'] );
+											$params = $mirror->getParameters();
+										}
+										foreach ($row['args'] as $key => $value) : ?>
 											<tr>
 												<td><code><?= htmlspecialchars(isset($params[$key]) ? '$'.$params[$key]->name : "#$key", ENT_SUBSTITUTE, 'UTF-8') ?></code></td>
 												<td><pre><?= print_r($value, true) ?></pre></td>
@@ -142,7 +145,7 @@
 							<tr>
 								<td><?= htmlspecialchars($key, ENT_IGNORE, 'UTF-8') ?></td>
 								<td>
-									<?php if (! is_array($value) && ! is_object($value)) : ?>
+									<?php if (is_string($value)) : ?>
 										<?= htmlspecialchars($value, ENT_SUBSTITUTE, 'UTF-8') ?>
 									<?php else: ?>
 										<?= '<pre>'.print_r($value, true) ?>
@@ -187,7 +190,7 @@
 
 			<!-- Request -->
 			<div class="content" id="request">
-				<?php $request = \CodeIgniter\Services::request(null, true); ?>
+				<?php $request = \CodeIgniter\Config\Services::request(null, true); ?>
 
 				<table>
 					<tbody>
@@ -296,7 +299,7 @@
 
 			<!-- Response -->
 			<?php
-				$response = \CodeIgniter\Services::response(null, true);
+				$response = \CodeIgniter\Config\Services::response(null, true);
 				$response->setStatusCode(http_response_code());
 			?>
 			<div class="content" id="response">

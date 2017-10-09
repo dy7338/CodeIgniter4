@@ -27,7 +27,7 @@ the third being the amount of time it takes for the bucket to refill::
     $throttler->check($name, 60, MINUTE);
 
 Here we're using one of the :doc:`global constants </general/common_functions>` for the time, to make it a little
-more readable. This says that the bucket allows 60 actions every minute, or 1 action every 60 seconds.
+more readable. This says that the bucket allows 60 actions every minute, or 1 action every second.
 
 Let's say that a third-party script was trying to hit a URL repeatedly. At first, it would be able to use all 60
 of those tokens in less than a second. However, after that the Throttler would only allow one action per second,
@@ -50,17 +50,17 @@ The Code
 
 You can find this file at **application/Filters/Throttle.php** but the relevant method is reproduced here::
 
-    public function before(RequestInterface $request)
+	public function before(RequestInterface $request)
 	{
-        $throttler = Services::throttler();
+		$throttler = Services::throttler();
 
-        // Restrict an IP address to no more
-        // than 1 request per second across the
-        // entire site.
-        if ($throttler->check($request->getIPAddress(), 60, MINUTE) === false)
-        {
-            return Services::response()->setStatusCode(429);
-        }
+		// Restrict an IP address to no more
+		// than 1 request per second across the
+		// entire site.
+		if ($throttler->check($request->getIPAddress(), 60, MINUTE) === false)
+		{
+		    return Services::response()->setStatusCode(429);
+		}
 	}
 
 When ran, this method first grabs an instance of the throttler. Next it uses the IP address as the bucket name,
@@ -77,10 +77,10 @@ to apply only to POST requests, though API's might want to limit to every reques
 this to incoming requests, you need to edit **/application/Config/Filters.php** and first add an alias to the
 filter::
 
-    public $aliases = [
+	public $aliases = [
 		'csrf' 	  => \App\Filters\CSRF::class,
 		'toolbar' => \App\Filters\DebugToolbar::class,
-        'throttle' => \App\Filters\Throttle::class
+		'throttle' => \App\Filters\Throttle::class
 	];
 
 Next, we assign it to all POST requests made on the site::
@@ -102,7 +102,7 @@ Class Reference
     :param int $seconds: The number of seconds it takes for a bucket to completely fill
     :param int $cost: The number of tokens that are spent for this action
     :returns: TRUE if action can be performed, FALSE if not
-    :rtype: integer
+    :rtype: bool
 
     Checks to see if there are any tokens left within the bucket, or if too many have
     been used within the allotted time limit. During each check the available tokens
@@ -116,3 +116,5 @@ Class Reference
     After ``check()`` has been ran and returned FALSE, this method can be used
     to determine the time until a new token should be available and the action can be
     tried again.
+
+    In this case, the minimum enforced wait time is one second.

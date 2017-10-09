@@ -6,7 +6,7 @@
 	<?= file_get_contents(__DIR__.'/toolbar.js') ?>
 </script>
 <div id="debug-icon" style="display:none">
-    <a href="#" onclick="ciDebugBar.toggleToolbar();">
+    <a href="javascript:void(0)" onclick="ciDebugBar.toggleToolbar();">
 	    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
 	         width="155.000000px" height="200.000000px" viewBox="0 0 155.000000 200.000000"
 	         preserveAspectRatio="xMidYMid meet">
@@ -27,17 +27,25 @@
 </div>
 <div id="debug-bar">
 	<div class="toolbar">
-		<h1><a href="#" onclick="ciDebugBar.toggleToolbar();">Debug Bar</a></h1>
+		<h1><a href="javascript:void(0)" onclick="ciDebugBar.toggleToolbar();">Debug Bar</a></h1>
 
 		<span><?= $totalTime ?> ms</span>
 		<span><?= $totalMemory ?> MB</span>
 		<span class="ci-label"><a href="javascript: void(0)" data-tab="ci-timeline">Timeline</a></span>
 		<?php foreach ($this->collectors as $c) : ?>
 			<?php if ($c->hasTabContent()) : ?>
-				<span class="ci-label"><a href="javascript: void(0)" data-tab="ci-<?= esc($c->getTitle(true)) ?>"><?= esc($c->getTitle()) ?></a></span>
+				<span class="ci-label">
+                    <a href="javascript: void(0)" data-tab="ci-<?= esc($c->getTitle(true)) ?>" >
+                        <?= esc($c->getTitle()) ?>
+	                    <?php if (! is_null($c->getBadgeValue())) : ?>
+                            <span class="badge"><?= $c->getBadgeValue() ?></span>
+                        <?php endif ?>
+                    </a>
+                </span>
 			<?php endif; ?>
 		<?php endforeach; ?>
 		<span class="ci-label"><a href="javascript: void(0)" data-tab="ci-vars">Vars</a></span>
+		<span id="toolbar-position"><a href="javascript: void(0)">&#8597;</a></span>
 	</div>
 
 	<!-- Timeline -->
@@ -76,7 +84,7 @@
 		<!-- VarData from Collectors -->
 		<?php foreach ($varData as $heading => $items) : ?>
 
-			<a href="#" onclick="ciDebugBar.toggleDataTable('<?= strtolower(str_replace(' ', '-', $heading)) ?>'); return false;">
+			<a href="javascript:void(0)" onclick="ciDebugBar.toggleDataTable('<?= strtolower(str_replace(' ', '-', $heading)) ?>'); return false;">
 				<h2><?= esc($heading) ?></h2>
 			</a>
 
@@ -110,12 +118,12 @@
 		<?php endforeach; ?>
 
 		<!-- Session -->
-		<a href="#" onclick="ciDebugBar.toggleDataTable('session'); return false;">
+		<a href="javascript:void(0)" onclick="ciDebugBar.toggleDataTable('session'); return false;">
 			<h2>Session User Data</h2>
 		</a>
 
 		<?php if (isset($_SESSION)) : ?>
-			<?php if (count($_SESSION)) : ?>
+			<?php if (! empty($_SESSION)) : ?>
 				<table id="session_table">
 					<tbody>
 					<?php foreach ($_SESSION as $key => $value) : ?>
@@ -147,7 +155,7 @@
 		<h2>Request <span>( <?= ($request->isSecure() ? 'HTTPS' : 'HTTP').'/'.$request->getProtocolVersion() ?> )</span></h2>
 
 		<?php if ($get = $request->getGet()) : ?>
-			<a href="#" onclick="ciDebugBar.toggleDataTable('get'); return false;">
+			<a href="javascript:void(0)" onclick="ciDebugBar.toggleDataTable('get'); return false;">
 				<h3>$_GET</h3>
 			</a>
 
@@ -164,7 +172,7 @@
 		<?php endif ?>
 
 		<?php if ($post = $request->getPost()) : ?>
-			<a href="#" onclick="ciDebugBar.toggleDataTable('post'); return false;">
+			<a href="javascript:void(0)" onclick="ciDebugBar.toggleDataTable('post'); return false;">
 				<h3>$_POST</h3>
 			</a>
 
@@ -181,7 +189,7 @@
 		<?php endif ?>
 
 		<?php if ($headers = $request->getHeaders()) : ?>
-			<a href="#" onclick="ciDebugBar.toggleDataTable('request_headers'); return false;">
+			<a href="javascript:void(0)" onclick="ciDebugBar.toggleDataTable('request_headers'); return false;">
 				<h3>Headers</h3>
 			</a>
 
@@ -203,7 +211,7 @@
 		<?php endif ?>
 
 		<?php if ($get = $request->getCookie()) : ?>
-			<a href="#" onclick="ciDebugBar.toggleDataTable('cookie'); return false;">
+			<a href="javascript:void(0)" onclick="ciDebugBar.toggleDataTable('cookie'); return false;">
 				<h3>Cookies</h3>
 			</a>
 
@@ -222,7 +230,7 @@
 		<h2>Response <span>( <?= $response->getStatusCode().' - '. esc($response->getReason()) ?> )</span></h2>
 
 		<?php if ($headers = $response->getHeaders()) : ?>
-			<a href="#" onclick="ciDebugBar.toggleDataTable('response_headers'); return false;">
+			<a href="javascript:void(0)" onclick="ciDebugBar.toggleDataTable('response_headers'); return false;">
 				<h3>Headers</h3>
 			</a>
 

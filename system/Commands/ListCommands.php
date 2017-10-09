@@ -7,7 +7,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
+ * Copyright (c) 2014-2017 British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,26 +29,32 @@
  *
  * @package	CodeIgniter
  * @author	CodeIgniter Dev Team
- * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	2014-2017 British Columbia Institute of Technology (https://bcit.ca/)
  * @license	https://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  * @since	Version 3.0.0
  * @filesource
  */
-
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 
 /**
- * CI Help command for the ci.php script.
+ * CI Help command for the spark script.
  *
- * Lists the basic usage information for the ci.php script,
+ * Lists the basic usage information for the spark script,
  * and provides a way to list help for other commands.
  *
  * @package CodeIgniter\Commands
  */
 class ListCommands extends BaseCommand
 {
+
+	/**
+	 * The group the command is lumped under
+	 * when listing commands.
+	 *
+	 * @var string
+	 */
 	protected $group = 'CodeIgniter';
 
 	/**
@@ -77,14 +83,14 @@ class ListCommands extends BaseCommand
 	 *
 	 * @var array
 	 */
-	protected $arguments = array();
+	protected $arguments = [];
 
 	/**
 	 * the Command's Options
 	 *
 	 * @var array
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * The length of the longest command name.
@@ -97,7 +103,7 @@ class ListCommands extends BaseCommand
 	//--------------------------------------------------------------------
 
 	/**
-	 * Displays the help for the ci.php cli script itself.
+	 * Displays the help for the spark cli script itself.
 	 *
 	 * @param array $params
 	 */
@@ -121,15 +127,15 @@ class ListCommands extends BaseCommand
 	{
 		arsort($commands);
 
-		$names     = array_keys($commands);
-		$descs     = array_column($commands, 'description');
-		$groups    = array_column($commands, 'group');
+		$names = array_keys($commands);
+		$descs = array_column($commands, 'description');
+		$groups = array_column($commands, 'group');
 		$lastGroup = '';
 
 		// Pad each item to the same length
 		$names = $this->padArray($names, 2, 2);
-
-		for ($i = 0; $i < count($names); $i++)
+		$countNames = count($names);
+		for ($i = 0; $i < $countNames; $i ++ )
 		{
 			$lastGroup = $this->describeGroup($groups[$i], $lastGroup);
 
@@ -175,16 +181,17 @@ class ListCommands extends BaseCommand
 	 *
 	 * @param array $array
 	 * @param int   $extra // How many extra spaces to add at the end
+	 * @param int   $indent
 	 *
 	 * @return array
 	 */
-	protected function padArray($array, $extra = 2, $indent=0)
+	protected function padArray($array, $extra = 2, $indent = 0)
 	{
-		$max = max(array_map('strlen', $array))+$extra+$indent;
+		$max = max(array_map('strlen', $array)) + $extra + $indent;
 
 		foreach ($array as &$item)
 		{
-			$item = str_repeat(' ', $indent).$item;
+			$item = str_repeat(' ', $indent) . $item;
 			$item = str_pad($item, $max);
 		}
 
@@ -192,5 +199,4 @@ class ListCommands extends BaseCommand
 	}
 
 	//--------------------------------------------------------------------
-
 }

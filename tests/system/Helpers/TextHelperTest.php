@@ -84,8 +84,9 @@ class TextHelperTest extends \CIUnitTestCase
 	public function test_random_string()
 	{
 		$this->assertEquals(16, strlen(random_string('alnum', 16)));
-		$this->assertEquals(32, strlen(random_string('unique', 16)));
 		$this->assertInternalType('string', random_string('numeric', 16));
+               $this->assertEquals(16, strlen($random = random_string('crypto', 16)));
+               $this->assertInternalType('string', $random);
 	}
 	// --------------------------------------------------------------------
 	public function test_increment_string()
@@ -237,7 +238,7 @@ class TextHelperTest extends \CIUnitTestCase
     public function test_excerpt()
     {
         $string = $this->_long_string;
-        $result = ' Once upon a time, a framework had no tests. It sad   So some nice people began to write tests. The more time that went on, the happier it became. ...';
+        $result = ' Once upon a time, a framework had no tests. It sad  So some nice people began to write tests. The more time that went on, the happier it became. ...';
         $this->assertEquals(excerpt($string), $result);
     }
     
@@ -247,7 +248,7 @@ class TextHelperTest extends \CIUnitTestCase
     {
         $string = $this->_long_string;
         $phrase = 'began';
-        $result = '... people  began  to ...';
+        $result = '... people began to ...';
         $this->assertEquals(excerpt($string, $phrase, 10), $result);
     }
 }

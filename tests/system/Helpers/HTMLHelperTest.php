@@ -1,9 +1,5 @@
 <?php namespace CodeIgniter\HTTP;
 
-use CodeIgniter\HTTP\URI;
-use Config\App;
-use CodeIgniter\Services;
-
 final class HTMLHelperTest extends \CIUnitTestCase
 {
 
@@ -23,8 +19,8 @@ final class HTMLHelperTest extends \CIUnitTestCase
 	}
 
 	//--------------------------------------------------------------------
-	
-	public function testUL()
+
+	public function testBasicUL()
 	{
 		$expected = <<<EOH
 <ul>
@@ -35,10 +31,13 @@ final class HTMLHelperTest extends \CIUnitTestCase
 EOH;
 
 		$expected = ltrim($expected);
-		$list     = array('foo', 'bar');
+		$list     = ['foo', 'bar'];
 
 		$this->assertEquals(ltrim($expected), ul($list));
+	}
 
+	public function testULWithClass()
+	{
 		$expected = <<<EOH
 <ul class="test">
   <li>foo</li>
@@ -48,7 +47,87 @@ EOH;
 EOH;
 
 		$expected = ltrim($expected);
+		$list     = ['foo', 'bar'];
+
 		$this->assertEquals($expected, ul($list, 'class="test"'));
+	}
+
+	public function testMultiLevelUL()
+	{
+		$expected = <<<EOH
+<ul>
+  <li>foo</li>
+  <li>bar</li>
+  <li>2
+    <ul>
+      <li>foo</li>
+      <li>bar</li>
+    </ul>
+  </li>
+</ul>
+
+EOH;
+
+		$expected = ltrim($expected);
+		$list     = ['foo', 'bar', ['foo', 'bar']];
+
+		$this->assertEquals(ltrim($expected), ul($list));
+	}
+
+	//--------------------------------------------------------------------
+
+	public function testBasicOL()
+	{
+		$expected = <<<EOH
+<ol>
+  <li>foo</li>
+  <li>bar</li>
+</ol>
+
+EOH;
+
+		$expected = ltrim($expected);
+		$list     = ['foo', 'bar'];
+
+		$this->assertEquals(ltrim($expected), ol($list));
+	}
+
+	public function testOLWithClass()
+	{
+		$expected = <<<EOH
+<ol class="test">
+  <li>foo</li>
+  <li>bar</li>
+</ol>
+
+EOH;
+
+		$expected = ltrim($expected);
+		$list     = ['foo', 'bar'];
+
+		$this->assertEquals($expected, ol($list, 'class="test"'));
+	}
+
+	public function testMultiLevelOL()
+	{
+		$expected = <<<EOH
+<ol>
+  <li>foo</li>
+  <li>bar</li>
+  <li>2
+    <ol>
+      <li>foo</li>
+      <li>bar</li>
+    </ol>
+  </li>
+</ol>
+
+EOH;
+
+		$expected = ltrim($expected);
+		$list     = ['foo', 'bar', ['foo', 'bar']];
+
+		$this->assertEquals(ltrim($expected), ol($list));
 	}
 
 	// ------------------------------------------------------------------------

@@ -7,7 +7,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
+ * Copyright (c) 2014-2017 British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,19 +29,18 @@
  *
  * @package	CodeIgniter
  * @author	CodeIgniter Dev Team
- * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	2014-2017 British Columbia Institute of Technology (https://bcit.ca/)
  * @license	https://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  * @since	Version 3.0.0
  * @filesource
  */
-
 define('EVENT_PRIORITY_LOW', 200);
 define('EVENT_PRIORITY_NORMAL', 100);
 define('EVENT_PRIORITY_HIGH', 10);
 
 /**
- * Hooks
+ * Events
  */
 class Events
 {
@@ -68,25 +67,40 @@ class Events
 	 */
 	protected static $eventsFile;
 
+	/**
+	 * If true, events will not actually be fired.
+	 * Useful during testing.
+	 *
+	 * @var bool
+	 */
+	protected static $simulate = false;
+
+	/**
+	 * Stores information about the events
+	 * for display in the debug toolbar.
+	 * @var array
+	 */
+	protected static $performanceLog = [];
+
 	//--------------------------------------------------------------------
 
 	/**
-	 * Ensures that we have a hooks file ready.
+	 * Ensures that we have a events file ready.
 	 *
 	 * @param string|null $file
 	 */
-	public static function initialize(string $file=null)
+	public static function initialize(string $file = null)
 	{
 		// Don't overwrite anything....
-		if (! empty(self::$eventsFile))
+		if ( ! empty(self::$eventsFile))
 		{
 			return;
 		}
 
 		// Default value
-	    if (empty($file))
+		if (empty($file))
 		{
-			$file = APPPATH.'Config/Events.php';
+			$file = APPPATH . 'Config/Events.php';
 		}
 
 		self::$eventsFile = $file;
@@ -98,10 +112,10 @@ class Events
 	 * Registers an action to happen on an event. The action can be any sort
 	 * of callable:
 	 *
-	 *  Hooks::on('create', 'myFunction');               // procedural function
-	 *  Hooks::on('create', ['myClass', 'myMethod']);    // Class::method
-	 *  Hooks::on('create', [$myInstance, 'myMethod']);  // Method on an existing instance
-	 *  Hooks::on('create', function() {});              // Closure
+	 *  Events::on('create', 'myFunction');               // procedural function
+	 *  Events::on('create', ['myClass', 'myMethod']);    // Class::method
+	 *  Events::on('create', [$myInstance, 'myMethod']);  // Method on an existing instance
+	 *  Events::on('create', function() {});              // Closure
 	 *
 	 * @param          $event_name
 	 * @param callable $callback
@@ -112,14 +126,14 @@ class Events
 		if ( ! isset(self::$listeners[$event_name]))
 		{
 			self::$listeners[$event_name] = [
-				true,   // If there's only 1 item, it's sorted.
+				true, // If there's only 1 item, it's sorted.
 				[$priority],
 				[$callback],
 			];
 		}
 		else
 		{
-			self::$listeners[$event_name][0]   = false; // Not sorted
+			self::$listeners[$event_name][0] = false; // Not sorted
 			self::$listeners[$event_name][1][] = $priority;
 			self::$listeners[$event_name][2][] = $callback;
 		}
@@ -133,12 +147,12 @@ class Events
 	 *  a) All subscribers have finished or
 	 *  b) a method returns false, at which point execution of subscribers stops.
 	 *
-	 * @param $event_name
+	 * @param $eventName
 	 * @param $arguments
 	 *
 	 * @return bool
 	 */
-	public static function trigger($event_name, ...$arguments): bool
+	public static function trigger($eventName, ...$arguments): bool
 	{
 		// Read in our Config/events file so that we have them all!
 		if ( ! self::$haveReadFromFile)
@@ -152,11 +166,24 @@ class Events
 			self::$haveReadFromFile = true;
 		}
 
-		$listeners = self::listeners($event_name);
+		$listeners = self::listeners($eventName);
 
 		foreach ($listeners as $listener)
 		{
-			$result = $listener(...$arguments);
+			$start = microtime(true);
+
+			$result = static::$simulate === false
+				? $listener(...$arguments)
+				: true;
+
+			if (CI_DEBUG)
+			{
+				static::$performanceLog[] = [
+					'start' => $start,
+					'end' => microtime(true),
+					'event' => strtolower($eventName)
+				];
+			}
 
 			if ($result === false)
 			{
@@ -266,6 +293,32 @@ class Events
 	public function setFile(string $path)
 	{
 		self::$eventsFile = $path;
+	}
+
+	//--------------------------------------------------------------------
+
+	/**
+	 * Turns simulation on or off. When on, events will not be triggered,
+	 * simply logged. Useful during testing when you don't actually want
+	 * the tests to run.
+	 *
+	 * @param bool $choice
+	 */
+	public static function simulate(bool $choice = true)
+	{
+		static::$simulate = $choice;
+	}
+
+	//--------------------------------------------------------------------
+
+	/**
+	 * Getter for the performance log records.
+	 *
+	 * @return array
+	 */
+	public static function getPerformanceLogs()
+	{
+		return static::$performanceLog;
 	}
 
 	//--------------------------------------------------------------------

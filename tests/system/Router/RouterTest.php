@@ -1,5 +1,7 @@
 <?php namespace CodeIgniter\Router;
 
+use CodeIgniter\Autoloader\MockFileLocator;
+
 class RouterTest extends \CIUnitTestCase
 {
 
@@ -16,7 +18,7 @@ class RouterTest extends \CIUnitTestCase
 
 	public function setUp()
 	{
-		$this->collection = new RouteCollection();
+		$this->collection = new RouteCollection(new MockFileLocator(new \Config\Autoload()));
 
 		$routes = [
 			'users'                        => 'Users::index',
@@ -28,6 +30,8 @@ class RouterTest extends \CIUnitTestCase
 			'closure/(:num)/(:alpha)'      => function ($num, $str) { return $num.'-'.$str; },
 			'{locale}/pages'			   => 'App\Pages::list_all',
 			'Admin/Admins'		   		   => 'App\Admin\Admins::list_all',
+            '/some/slash'                  => 'App\Slash::index',
+			'objects/(:segment)/sort/(:segment)/([A-Z]{3,7})'   => 'AdminList::objectsSortCreate/$1/$2/$3'
 		];
 
 		$this->collection->map($routes);
@@ -125,6 +129,21 @@ class RouterTest extends \CIUnitTestCase
 
 	//--------------------------------------------------------------------
 
+	/**
+	 * @see https://github.com/bcit-ci/CodeIgniter4/issues/672
+	 */
+	public function testURIMapsParamsWithMany()
+	{
+		$router = new Router($this->collection);
+
+		$router->handle('objects/123/sort/abc/FOO');
+
+		$this->assertEquals('objectsSortCreate', $router->methodName());
+		$this->assertEquals([123, 'abc', 'FOO'], $router->params());
+	}
+
+	//--------------------------------------------------------------------
+
 	public function testClosures()
 	{
 		$router = new Router($this->collection);
@@ -204,5 +223,17 @@ class RouterTest extends \CIUnitTestCase
 	}
 
 	//--------------------------------------------------------------------
+
+    public function testRouteWithLeadingSlash()
+    {
+        $router = new Router($this->collection);
+
+        $router->handle('some/slash');
+
+        $this->assertEquals('\App\Slash', $router->controllerName());
+        $this->assertEquals('index', $router->methodName());
+    }
+
+    //--------------------------------------------------------------------
 
 }

@@ -2,13 +2,13 @@
 Controller Filters
 ##################
 
-Controller Filters allow you to perform actions either before or after the controllers execute. Unlike :doc:`hooks </general/hooks>`,
+Controller Filters allow you to perform actions either before or after the controllers execute. Unlike :doc:`events </general/events>`,
 you can very simply choose which URI's in your application have the filters applied to them. Incoming filters may
 modify the Request, while after filters can act on and even modify the Response, allowing for a lot of flexibility
 and power. Some common examples of tasks that might be performed with filters are:
 
 * Performing CSRF protection on the incoming requests
-* Restricting areas of your site based upon their Role.
+* Restricting areas of your site based upon their Role
 * Perform rate limiting on certain endpoints
 * Display a "Down for Maintenance" page
 * Perform automatic content negotiation
@@ -114,7 +114,7 @@ The second section allows you to define any filters that should be applied to ev
 You should take care with how many you use here, since it could have performance implications to have too many
 run on every request. Filters can be specified by adding their alias to either the before or after array::
 
-    public $globals = [
+	public $globals = [
 		'before' => [
 			'csrf'
 		],
@@ -126,7 +126,7 @@ One common example is if you need to exclude a few URI's from the CSRF protectio
 third-party websites to hit one or two specific URI's, while keeping the rest of them protected. To do this, add
 an array with the 'except' key and a uri to match as the value alongside the alias::
 
-    public $globals = [
+	public $globals = [
 		'before' => [
 			'csrf' => ['except' => 'api/*']
 		],
@@ -138,7 +138,7 @@ an asterisk for a wildcard that will match all characters after that. In this ex
 would be exempted from CSRF protection, but the site's forms would all be protected. If you need to specify multiple
 URI's you can use an array of URI patterns::
 
-    public $globals = [
+	public $globals = [
 		'before' => [
 			'csrf' => ['except' => ['foo/*', 'bar/*']]
 		],

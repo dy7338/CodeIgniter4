@@ -43,13 +43,11 @@ The following functions are available:
 	-  **nozero**: Numeric string with no zeros.
 	-  **md5**: An encrypted random number based on ``md5()`` (fixed length of 32).
 	-  **sha1**: An encrypted random number based on ``sha1()`` (fixed length of 40).
+        -  **crypto**: A random string based on ``random_bytes()``.
 
 	Usage example::
 
 		echo random_string('alnum', 16);
-
-	.. note:: Usage of the *unique* and *encrypt* types is DEPRECATED. They
-		are just aliases for *md5* and *sha1* respectively.
 
 .. php:function:: increment_string($str[, $separator = '_'[, $first = 1]])
 
@@ -124,8 +122,8 @@ The following functions are available:
 	Example::
 
 		$str = array(
-			'question'  => 'Is your name O\'reilly?',
-			'answer' => 'No, my name is O\'connor.'
+			'question' => 'Is your name O\'reilly?',
+			'answer'   => 'No, my name is O\'connor.'
 		);
 
 		$str = strip_slashes($str);
@@ -133,8 +131,8 @@ The following functions are available:
 	The above will return the following array::
 
 		array(
-			'question'  => "Is your name O'reilly?",
-			'answer' => "No, my name is O'connor."
+			'question' => "Is your name O'reilly?",
+			'answer'   => "No, my name is O'connor."
 		);
 
 	.. note:: For historical reasons, this function will also accept
@@ -291,7 +289,7 @@ The following functions are available:
 	Example::
 
 		$disallowed = array('darn', 'shucks', 'golly', 'phooey');
-		$string = word_censor($string, $disallowed, 'Beep!');
+		$string     = word_censor($string, $disallowed, 'Beep!');
 
 .. php:function:: highlight_code($str)
 

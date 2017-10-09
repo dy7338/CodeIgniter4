@@ -25,19 +25,19 @@ Escaping field values
 You may need to use HTML and characters such as quotes within your form
 elements. In order to do that safely, you'll need to use
 :doc:`common function <../general/common_functions>`
-:func:`html_escape()`.
+:func:`esc()`.
 
 Consider the following example::
 
 	$string = 'Here is a string containing "quoted" text.';
 
-	<input type="text" name="myfield" value="<?php echo $string; ?>" />
+	<input type="text" name="myfield" value="<?= $string; ?>" />
 
 Since the above string contains a set of quotes, it will cause the form
-to break. The :php:func:`html_escape()` function converts HTML special
+to break. The :php:func:`esc()` function converts HTML special
 characters so that it can be used safely::
 
-	<input type="text" name="myfield" value="<?php echo html_escape($string); ?>" />
+	<input type="text" name="myfield" value="<?= esc($string); ?>" />
 
 .. note:: If you use any of the form helper functions listed on this page,
 	the form values will be automatically escaped, so there is no need
@@ -205,12 +205,12 @@ The following functions are available:
 	form to contain::
 
 		$data = array(
-			'name'		=> 'username',
-			'id'		=> 'username',
-			'value'		=> 'johndoe',
-			'maxlength'	=> '100',
-			'size'		=> '50',
-			'style'		=> 'width:50%'
+			'name'      => 'username',
+			'id'        => 'username',
+			'value'     => 'johndoe',
+			'maxlength' => '100',
+			'size'      => '50',
+			'style'     => 'width:50%'
 		);
 
 		echo form_input($data);
@@ -300,10 +300,10 @@ The following functions are available:
     	Example::
 
 		$options = array(
-			'small'		=> 'Small Shirt',
-			'med'		=> 'Medium Shirt',
-			'large'		=> 'Large Shirt',
-			'xlarge'	=> 'Extra Large Shirt',
+			'small'  => 'Small Shirt',
+			'med'    => 'Medium Shirt',
+			'large'  => 'Large Shirt',
+			'xlarge' => 'Extra Large Shirt',
 		);
 
 		$shirts_on_sale = array('small', 'large');
@@ -457,11 +457,11 @@ The following functions are available:
 	array of attributes to the function::
 
 		$data = array(
-			'name'		=> 'newsletter',
-			'id'		=> 'newsletter',
-			'value'		=> 'accept',
-			'checked'	=> TRUE,
-			'style'		=> 'margin:10px'
+			'name'    => 'newsletter',
+			'id'      => 'newsletter',
+			'value'   => 'accept',
+			'checked' => TRUE,
+			'style'   => 'margin:10px'
 		);
 
 		echo form_checkbox($data);
@@ -568,11 +568,11 @@ The following functions are available:
 	form to contain::
 
 		$data = array(
-			'name'		=> 'button',
-			'id'		=> 'button',
-			'value'		=> 'true',
-			'type'		=> 'reset',
-			'content'	=> 'Reset'
+			'name'    => 'button',
+			'id'      => 'button',
+			'value'   => 'true',
+			'type'    => 'reset',
+			'content' => 'Reset'
 		);
 
 		echo form_button($data);
@@ -621,9 +621,9 @@ The following functions are available:
 
 	The above form will show "0" when loaded for the first time.
 
-	.. note:: If you've loaded the :doc:`Form Validation Library <../libraries/form_validation>` and
+	.. note:: If you've loaded the :doc:`Form Validation Library <../libraries/validation>` and
 		have set a validation rule for the field name in use with this helper, then it will
-		forward the call to the :doc:`Form Validation Library <../libraries/form_validation>`'s
+		forward the call to the :doc:`Form Validation Library <../libraries/validation>`'s
 		own ``set_value()`` method. Otherwise, this function looks in ``$_POST`` for the
 		field value.
 
@@ -700,7 +700,7 @@ The following functions are available:
     	:rtype:	string
 
     	Returns a validation error message from the :doc:`Form Validation Library
-    	<../libraries/form_validation>`, associated with the specified field name.
+    	<../libraries/validation>`, associated with the specified field name.
     	You can optionally specify opening and closing tag(s) to put around the error
     	message.
 
@@ -721,7 +721,7 @@ The following functions are available:
 
     	Similarly to the :php:func:`form_error()` function, returns all validation
 	error messages produced by the :doc:`Form Validation Library
-    	<../libraries/form_validation>`, with optional opening and closing tags
+    	<../libraries/validation>`, with optional opening and closing tags
     	around each of the messages.
 
     	Example::

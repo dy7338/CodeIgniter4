@@ -76,7 +76,7 @@ By default, the method is returned as a lower-case string (i.e. 'get', 'post', e
 uppercase version by passing in ``true`` as the only parameter::
 
 	// Returns 'GET'
-	$method = $request->method(true);
+	$method = $request->getMethod(true);
 
 You can also check if the request was made through and HTTPS connection with the ``isSecure()`` method::
 
@@ -140,12 +140,14 @@ Finally, you can grab the contents of php://input as a raw stream with ``getRawI
 	$data = $request->getRawInput();
 
 This will retrieve data and convert it to an array. Like this::
+
 	var_dump($request->getRawInput());
-	
+
 	[
 		'Param1' => 'Value1',
-		'Param2' => 'Value2',
+		'Param2' => 'Value2'
 	]
+
 Filtering Input Data
 --------------------
 
@@ -171,9 +173,9 @@ an array of all headers, with the key as the name of the header, and the value b
 	var_dump($request->getHeaders());
 
 	[
-		'Host' => CodeIgniter\HTTP\Header,
+		'Host'          => CodeIgniter\HTTP\Header,
 		'Cache-Control' => CodeIgniter\HTTP\Header,
-		'Accept' => CodeIgniter\HTTP\Header,
+		'Accept'        => CodeIgniter\HTTP\Header,
 	]
 
 If you only need a single header, you can pass the name into the ``getHeader()`` method. This will grab the
@@ -276,10 +278,9 @@ Class Reference
 
 The methods provided by the parent classes that are available are:
 
-* :meth:`CodeIgniter\\HTTP\\Request::ipAddress`
+* :meth:`CodeIgniter\\HTTP\\Request::getIPAddress`
 * :meth:`CodeIgniter\\HTTP\\Request::validIP`
-* :meth:`CodeIgniter\\HTTP\\Request::method`
-* :meth:`CodeIgniter\\HTTP\\Request::getServer`
+* :meth:`CodeIgniter\\HTTP\\Request::getMethod`
 * :meth:`CodeIgniter\\HTTP\\Request::getServer`
 * :meth:`CodeIgniter\\HTTP\\Message::body`
 * :meth:`CodeIgniter\\HTTP\\Message::setBody`
@@ -315,10 +316,11 @@ The methods provided by the parent classes that are available are:
 		:returns: True if the request is an HTTPS request, otherwise false.
 		:rtype: bool
 
-	.. php:method:: getVar([$index = null[, $filter = null])
+	.. php:method:: getVar([$index = null[, $filter = null[, $flags = null]]])
 
 		:param  string  $index: The name of the variable/key to look for.
 		:param  int     $filter: The type of filter to apply. A list of filters can be found `here <http://php.net/manual/en/filter.filters.php>`_.
+		:param  int     $flags: Flags to apply. A list of flags can be found `here <http://php.net/manual/en/filter.filters.flags.php>`_.
 		:returns:   $_REQUEST if no parameters supplied, otherwise the REQUEST value if found, or null if not
 		:rtype: mixed|null
 
@@ -351,28 +353,31 @@ The methods provided by the parent classes that are available are:
 
 			$request->getVar(['field1', 'field2'], FILTER_SANITIZE_STRING);
 
-	.. php:method:: getGet([$index = null[, $filter = null]])
+	.. php:method:: getGet([$index = null[, $filter = null[, $flags = null]]])
 
 		:param  string  $index: The name of the variable/key to look for.
 		:param  int  $filter: The type of filter to apply. A list of filters can be found `here <http://php.net/manual/en/filter.filters.php>`_.
+		:param  int     $flags: Flags to apply. A list of flags can be found `here <http://php.net/manual/en/filter.filters.flags.php>`_.
 		:returns:   $_GET if no parameters supplied, otherwise the GET value if found, or null if not
 		:rtype: mixed|null
 
 		This method is identical to ``getVar()``, only it fetches GET data.
 
-	.. php:method:: getPost([$index = null[, $filter = null]])
+	.. php:method:: getPost([$index = null[, $filter = null[, $flags = null]]])
 
 		:param  string  $index: The name of the variable/key to look for.
 		:param  int  $filter: The type of filter to apply. A list of filters can be found `here <http://php.net/manual/en/filter.filters.php>`_.
+		:param  int     $flags: Flags to apply. A list of flags can be found `here <http://php.net/manual/en/filter.filters.flags.php>`_.
 		:returns:   $_POST if no parameters supplied, otherwise the POST value if found, or null if not
 		:rtype: mixed|null
 
 			This method is identical to ``getVar()``, only it fetches POST data.
 
-	.. php:method:: getPostGet([$index = null[, $filter = null]])
+	.. php:method:: getPostGet([$index = null[, $filter = null[, $flags = null]]])
 
 		:param  string  $index: The name of the variable/key to look for.
 		:param  int     $filter: The type of filter to apply. A list of filters can be found `here <http://php.net/manual/en/filter.filters.php>`_.
+		:param  int     $flags: Flags to apply. A list of flags can be found `here <http://php.net/manual/en/filter.filters.flags.php>`_.
 		:returns:   $_POST if no parameters supplied, otherwise the POST value if found, or null if not
 		:rtype: mixed|null
 
@@ -382,10 +387,11 @@ The methods provided by the parent classes that are available are:
 
 			$request->getPostGet('field1');
 
-	.. php:method:: getGetPost([$index = null[, $filter = null]])
+	.. php:method:: getGetPost([$index = null[, $filter = null[, $flags = null]]])
 
 		:param  string  $index: The name of the variable/key to look for.
 		:param  int     $filter: The type of filter to apply. A list of filters can be found `here <http://php.net/manual/en/filter.filters.php>`_.
+		:param  int     $flags: Flags to apply. A list of flags can be found `here <http://php.net/manual/en/filter.filters.flags.php>`_.
 		:returns:   $_POST if no parameters supplied, otherwise the POST value if found, or null if not
 		:rtype: mixed|null
 
@@ -395,10 +401,11 @@ The methods provided by the parent classes that are available are:
 
 			$request->getGetPost('field1');
 
-	.. php:method:: getCookie([$index = null[, $filter = NULL]])
+	.. php:method:: getCookie([$index = null[, $filter = null[, $flags = null]]])
 
 		:param	mixed	$index: COOKIE name
 		:param  int     $filter: The type of filter to apply. A list of filters can be found `here <http://php.net/manual/en/filter.filters.php>`_.
+		:param  int     $flags: Flags to apply. A list of flags can be found `here <http://php.net/manual/en/filter.filters.flags.php>`_.
 		:returns:	$_COOKIE if no parameters supplied, otherwise the COOKIE value if found or null if not
 		:rtype:	mixed
 
@@ -415,10 +422,11 @@ The methods provided by the parent classes that are available are:
 			function :php:func:`get_cookie()`, this method does NOT prepend
 			your configured ``$config['cookie_prefix']`` value.
 
-	.. php:method:: getServer($index[, $filter = null])
+	.. php:method:: getServer([$index = null[, $filter = null[, $flags = null]]])
 
 		:param	mixed	$index: Value name
 		:param  int     $filter: The type of filter to apply. A list of filters can be found `here <http://php.net/manual/en/filter.filters.php>`_.
+		:param  int     $flags: Flags to apply. A list of flags can be found `here <http://php.net/manual/en/filter.filters.flags.php>`_.
 		:returns:	$_SERVER item value if found, NULL if not
 		:rtype:	mixed
 
@@ -442,5 +450,3 @@ The methods provided by the parent classes that are available are:
 		This method returns the User Agent string from the SERVER data::
 
 			$request->getUserAgent();
-
-

@@ -10,9 +10,11 @@ Library Reference
     caching
     cli
     content_negotiation
-    localization
     curlrequest
+    images
+    files
     incomingrequest
+    localization
     message
     pagination
     request

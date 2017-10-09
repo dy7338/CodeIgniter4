@@ -178,9 +178,9 @@ you need it.
 You can simply assign data to the ``$_SESSION`` array, as with any other
 variable. Or as a property of ``$session``.
 
-Alternatively, the old method of assigning it as "userdata" is also
-available. That however passing an array containing your new data to the
-``set_userdata()`` method::
+userdata method is deprecated.
+ That however passing an array containing your new sessiondata to the
+``set()`` method::
 
 	$session->set($array);
 
@@ -193,9 +193,9 @@ an example::
 		'logged_in' => TRUE
 	);
 
-	$session->set_userdata($newdata);
+	$session->set($newdata);
 
-If you want to add userdata one value at a time, ``set()`` also
+If you want to add sessiondata one value at a time, ``set()`` also
 supports this syntax::
 
 	$session->set('some_name', 'some_value');
@@ -566,7 +566,7 @@ table that we already mentioned and then set it as your
 For example, if you would like to use 'ci_sessions' as your table name,
 you would do this::
 
-	public $sessionDriver = 'database';
+	public $sessionDriver   = 'database';
 	public $sessionSavePath = 'ci_sessions';
 
 And then of course, create the database table ...
@@ -574,7 +574,7 @@ And then of course, create the database table ...
 For MySQL::
 
 	CREATE TABLE IF NOT EXISTS `ci_sessions` (
-		`id` varchar(40) NOT NULL,
+		`id` varchar(128) NOT NULL,
 		`ip_address` varchar(45) NOT NULL,
 		`timestamp` int(10) unsigned DEFAULT 0 NOT NULL,
 		`data` blob NOT NULL,
@@ -584,7 +584,7 @@ For MySQL::
 For PostgreSQL::
 
 	CREATE TABLE "ci_sessions" (
-		"id" varchar(40) NOT NULL,
+		"id" varchar(128) NOT NULL,
 		"ip_address" varchar(45) NOT NULL,
 		"timestamp" bigint DEFAULT 0 NOT NULL,
 		"data" text DEFAULT '' NOT NULL
@@ -612,8 +612,8 @@ You can choose the Database group to use by adding a new line to the
 If you'd rather not do all of this by hand, you can use the ``session:migration`` command
 from the cli to generate a migration file for you::
 
-  > php ci.php session:migration
-  > php ci.php migrate
+  > php spark session:migration
+  > php spark migrate
 
 This command will take the **sessionSavePath** and **sessionMatchIP** settings into account
 when it generates the code.
@@ -660,7 +660,7 @@ link you to it:
 For the most common case however, a simple ``host:port`` pair should be
 sufficient::
 
-	public $sessionDiver = 'redis';
+	public $sessionDiver    = 'redis';
 	public $sessionSavePath = 'tcp://localhost:6379';
 
 Memcached Driver
@@ -688,7 +688,7 @@ considered as it may result in loss of sessions.
 The ``$sessionSavePath`` format is fairly straightforward here,
 being just a ``host:port`` pair::
 
-	public $sessionDriver = 'memcached';
+	public $sessionDriver   = 'memcached';
 	public $sessionSavePath = 'localhost:11211';
 
 Bonus Tip

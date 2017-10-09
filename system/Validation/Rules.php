@@ -7,7 +7,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
+ * Copyright (c) 2014-2017 British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,13 +29,12 @@
  *
  * @package	CodeIgniter
  * @author	CodeIgniter Dev Team
- * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	2014-2017 British Columbia Institute of Technology (https://bcit.ca/)
  * @license	https://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  * @since	Version 3.0.0
  * @filesource
  */
-
 use Config\Database;
 
 /**
@@ -45,7 +44,6 @@ use Config\Database;
  */
 class Rules
 {
-
 	//--------------------------------------------------------------------
 
 	/**
@@ -57,11 +55,9 @@ class Rules
 	 *
 	 * @return bool
 	 */
-	public function differs(string $str=null, string $field, array $data): bool
+	public function differs(string $str = null, string $field, array $data): bool
 	{
-		return array_key_exists($field, $data)
-			? ($str !== $data[$field])
-			: false;
+		return array_key_exists($field, $data) ? ($str !== $data[$field]) : false;
 	}
 
 	//--------------------------------------------------------------------
@@ -75,14 +71,14 @@ class Rules
 	 *
 	 * @return bool
 	 */
-	public function exact_length(string $str=null, string $val, array $data): bool
+	public function exact_length(string $str = null, string $val, array $data): bool
 	{
-		if (! is_numeric($val))
+		if ( ! is_numeric($val))
 		{
 			return false;
 		}
 
-		return ((int)$val == mb_strlen($str));
+		return ((int) $val == mb_strlen($str));
 	}
 
 	//--------------------------------------------------------------------
@@ -90,12 +86,13 @@ class Rules
 	/**
 	 * Greater than
 	 *
-	 * @param    string
-	 * @param    int
+	 * @param    string $str
+	 * @param    string    $min
+	 * @param    array  $data
 	 *
 	 * @return    bool
 	 */
-	public function greater_than(string $str=null, string $min, array $data): bool
+	public function greater_than(string $str = null, string $min, array $data): bool
 	{
 		return is_numeric($str) ? ($str > $min) : false;
 	}
@@ -105,12 +102,13 @@ class Rules
 	/**
 	 * Equal to or Greater than
 	 *
-	 * @param    string
-	 * @param    int
+	 * @param    string $str
+	 * @param    string $min
+	 * @param    array  $data
 	 *
 	 * @return    bool
 	 */
-	public function greater_than_equal_to(string $str=null, string $min, array $data): bool
+	public function greater_than_equal_to(string $str = null, string $min, array $data): bool
 	{
 		return is_numeric($str) ? ($str >= $min) : false;
 	}
@@ -120,14 +118,17 @@ class Rules
 	/**
 	 * Value should be within an array of values
 	 *
-	 * @param	string
-	 * @param	string
+	 * @param	string $value
+	 * @param	string $list
+	 * @param	array $data
 	 * @return	bool
 	 */
-	public function in_list(string $value=null, string $list, array $data): bool
+	public function in_list(string $value = null, string $list, array $data): bool
 	{
-	    $list = explode(',', $list);
-	    $list = array_map(function($value) { return trim($value); }, $list);
+		$list = explode(',', $list);
+		$list = array_map(function($value) {
+			return trim($value);
+		}, $list);
 		return in_array($value, $list, TRUE);
 	}
 
@@ -148,7 +149,7 @@ class Rules
 	 *
 	 * @return bool
 	 */
-	public function is_unique(string $str=null, string $field, array $data): bool
+	public function is_unique(string $str = null, string $field, array $data): bool
 	{
 		// Grab any data for exclusion of a single row.
 		list($field, $ignoreField, $ignoreValue) = array_pad(explode(',', $field), 3, null);
@@ -156,17 +157,17 @@ class Rules
 		// Break the table and field apart
 		sscanf($field, '%[^.].%[^.]', $table, $field);
 
-		$db  = Database::connect();
+		$db = Database::connect();
 		$row = $db->table($table)
-				  ->where($field, $str);
+				->where($field, $str);
 
-		if (! empty($ignoreField) && ! empty($ignoreValue))
+		if ( ! empty($ignoreField) && ! empty($ignoreValue))
 		{
 			$row = $row->where("{$ignoreField} !=", $ignoreValue);
 		}
 
-		return (bool)($row->get()
-						  ->getRow() === null);
+		return (bool) ($row->get()
+						->getRow() === null);
 	}
 
 	//--------------------------------------------------------------------
@@ -174,12 +175,12 @@ class Rules
 	/**
 	 * Less than
 	 *
-	 * @param    string
-	 * @param    int
+	 * @param    string $str
+	 * @param    string $max
 	 *
 	 * @return    bool
 	 */
-	public function less_than(string $str=null, string $max): bool
+	public function less_than(string $str = null, string $max): bool
 	{
 		return is_numeric($str) ? ($str < $max) : false;
 	}
@@ -189,12 +190,12 @@ class Rules
 	/**
 	 * Equal to or Less than
 	 *
-	 * @param    string
-	 * @param    int
+	 * @param    string $str
+	 * @param    string $max
 	 *
 	 * @return    bool
 	 */
-	public function less_than_equal_to(string $str=null, string $max): bool
+	public function less_than_equal_to(string $str = null, string $max): bool
 	{
 		return is_numeric($str) ? ($str <= $max) : false;
 	}
@@ -210,11 +211,9 @@ class Rules
 	 *
 	 * @return bool
 	 */
-	public function matches(string $str=null, string $field, array $data): bool
+	public function matches(string $str = null, string $field, array $data): bool
 	{
-		return array_key_exists($field, $data)
-			? ($str === $data[$field])
-			: false;
+		return array_key_exists($field, $data) ? ($str === $data[$field]) : false;
 	}
 
 	//--------------------------------------------------------------------
@@ -228,9 +227,9 @@ class Rules
 	 *
 	 * @return bool
 	 */
-	public function max_length(string $str=null, string $val, array $data): bool
+	public function max_length(string $str = null, string $val, array $data): bool
 	{
-		if (! is_numeric($val))
+		if ( ! is_numeric($val))
 		{
 			return false;
 		}
@@ -249,9 +248,9 @@ class Rules
 	 *
 	 * @return bool
 	 */
-	public function min_length(string $str=null, string $val, array $data): bool
+	public function min_length(string $str = null, string $val, array $data): bool
 	{
-		if (! is_numeric($val))
+		if ( ! is_numeric($val))
 		{
 			return false;
 		}
@@ -264,13 +263,18 @@ class Rules
 	/**
 	 * Required
 	 *
-	 * @param    string
+	 * @param    mixed  $str    Value
 	 *
-	 * @return    bool
+	 * @return    bool          True if valid, false if not
 	 */
-	public function required($str=null): bool
+	public function required($str = null): bool
 	{
-		return is_array($str) ? (bool)count($str) : (trim($str) !== '');
+		if (is_object($str))
+		{
+			return true;
+		}
+
+		return is_array($str) ?  ! empty($str) : (trim($str) !== '');
 	}
 
 	//--------------------------------------------------------------------
@@ -284,14 +288,14 @@ class Rules
 	 * 	required_with[password]
 	 *
 	 * @param        $str
-	 * @param string $fields
-	 * @param array  $data
+	 * @param string $fields    List of fields that we should check if present
+	 * @param array  $data      Complete list of fields from the form
 	 *
 	 * @return bool
 	 */
-	public function required_with($str=null, string $fields, array $data): bool
+	public function required_with($str = null, string $fields, array $data): bool
 	{
-	    $fields = explode(',', $fields);
+		$fields = explode(',', $fields);
 
 		// If the field is present we can safely assume that
 		// the field is here, no matter whether the corresponding
@@ -305,14 +309,24 @@ class Rules
 
 		// Still here? Then we fail this test if
 		// any of the fields are present in $data
-		$requiredFields = array_intersect($fields, $data);
+		// as $fields is the lis
+		$requiredFields = [];
 
-		$requiredFields = array_filter($requiredFields, function($item)
+		foreach ($fields as $field)
 		{
-			return ! empty($item);
+			if (array_key_exists($field, $data))
+			{
+				$requiredFields[] = $field;
+			}
+		}
+
+		// Remove any keys with empty values since, that means they
+		// weren't truly there, as far as this is concerned.
+		$requiredFields = array_filter($requiredFields, function($item) use($data) {
+			return ! empty($data[$item]);
 		});
 
-		return ! (bool)count($requiredFields);
+		return empty($requiredFields);
 	}
 
 	//--------------------------------------------------------------------
@@ -331,7 +345,7 @@ class Rules
 	 *
 	 * @return bool
 	 */
-	public function required_without($str=null, string $fields, array $data): bool
+	public function required_without($str = null, string $fields, array $data): bool
 	{
 		$fields = explode(',', $fields);
 
@@ -349,7 +363,7 @@ class Rules
 		// any of the fields are not present in $data
 		foreach ($fields as $field)
 		{
-			if (! array_key_exists($field, $data))
+			if ( ! array_key_exists($field, $data))
 			{
 				return false;
 			}
@@ -359,5 +373,4 @@ class Rules
 	}
 
 	//--------------------------------------------------------------------
-
 }
